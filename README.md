@@ -31,7 +31,7 @@ npm start
 inside the client((Frontend)) folder, run;
 
 ```bash
-npm start
+npm run dev
 ```
 
 ## Environment variables
