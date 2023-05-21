@@ -97,9 +97,9 @@ const HomePage = () => {
         <Button
           sx={{
             color: "White",
-            bgcolor: "deepskyblue",
+            bgcolor: "#444271",
             "&:hover": {
-              backgroundColor: "lightblue",
+              backgroundColor: "#8884d8",
             },
           }}
           onClick={handleOpen}
@@ -154,7 +154,7 @@ const HomePage = () => {
                       mb: 1,
                       color: "White",
                       borderRadius: "5px",
-                      bgcolor: "deepskyblue",
+                      bgcolor: "#8884d8",
                     }}
                     color="text.secondary"
                   >
@@ -166,7 +166,7 @@ const HomePage = () => {
                   </Typography>
                 </CardContent>
                 <CardActions sx={{ justifyContent: "flex-end" }}>
-                  <Button size="small" onClick={() => editExpense(expense)}>
+                  <Button size="small"  sx={{ color: "#8884d8" }} onClick={() => editExpense(expense)}>
                     Edit
                   </Button>
                   <Button

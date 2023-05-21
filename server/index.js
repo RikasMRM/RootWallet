@@ -19,8 +19,7 @@ app.use('/api/expenses', expensesRouter);
 
 //** Connect to MongoDB
 const PORT = process.env.PORT || 6001;
-const MONGO_URL =
-  'mongodb+srv://rikasrkf:rikas@cluster0.thypy2h.mongodb.net/?retryWrites=true&w=majority';
+const MONGO_URL = process.env.MONGO_URL;
 
 mongoose
   .connect(MONGO_URL, {
