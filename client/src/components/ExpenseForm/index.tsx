@@ -183,6 +183,7 @@ const ExpenseForm: React.FC<{
             type="submit"
             variant="contained"
             fullWidth
+            sx={{ bgcolor: "#8884d8", }}
             size={"medium"}
             disabled={isSubmitting}
           >

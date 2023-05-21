@@ -1,6 +1,6 @@
 # RootWallet - wallet application to track expenses
 ![My Image](final.jpg)
-![My Image](form.jpg)
+![My Image](addform.jpg)
 
 This application contains 2 main repos, front end and backend in 2 separate folders names "client" and "server"
 
