@@ -16,6 +16,7 @@ import { Controller, useForm } from "react-hook-form";
 import expenseFormValidationSchema from "./schema";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { categories } from "../../data/categories";
 
 interface IExpenseForm {
   title: string;
@@ -24,29 +25,6 @@ interface IExpenseForm {
   category: string;
   amount: number;
 }
-
-const categories = [
-  {
-    text: "Food",
-    value: "Food",
-  },
-  {
-    text: "Social Life",
-    value: "SocialLife",
-  },
-  {
-    text: "Transportation",
-    value: "Transportation",
-  },
-  {
-    text: "Health",
-    value: "Health",
-  },
-  {
-    text: "Miscellaneous",
-    value: "Miscellaneous",
-  },
-];
 
 const ExpenseForm: React.FC<{
   handleClose: () => void;
