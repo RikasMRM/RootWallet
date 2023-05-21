@@ -1,19 +1,19 @@
-import Hero from "./components/Hero.tsx";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import HomePage from "./pages/HomePage.tsx";
 
 import "./App.css";
 
 const App = () => {
   return (
     <>
-      <main>
-        <div className="main">
-          <div className="gradient" />
-        </div>
-
-        <div>
-          <Hero />
-        </div>
-      </main>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <main>
+          <div>
+            <HomePage />
+          </div>
+        </main>
+      </LocalizationProvider>
     </>
   );
 };
