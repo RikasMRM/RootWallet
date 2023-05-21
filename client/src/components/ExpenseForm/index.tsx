@@ -14,6 +14,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import axios from "axios";
 import { Controller, useForm } from "react-hook-form";
 import expenseFormValidationSchema from "./schema";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 interface IExpenseForm {
   title: string;
@@ -46,14 +48,15 @@ const categories = [
   },
 ];
 
-const ExpenseForm = () => {
+const ExpenseForm: React.FC<{
+  handleClose: () => void;
+}> = ({ handleClose }) => {
+  const selector = useSelector((state) => state.expense);
   const {
     control,
     handleSubmit,
-    getValues,
     setValue,
     reset,
-    watch,
     formState: { isSubmitting },
   } = useForm<IExpenseForm>({
     mode: "all",
@@ -67,16 +70,43 @@ const ExpenseForm = () => {
     },
   });
 
+  useEffect(() => {
+    if (selector.editingExpense) {
+      setValue("amount", selector.editingExpense.amount);
+      setValue("title", selector.editingExpense.title);
+      setValue("description", selector.editingExpense.description);
+      setValue("category", selector.editingExpense.category);
+      setValue("date", selector.editingExpense.createdAt);
+    }
+  }, [selector.editingExpense]);
+
   const onSubmit = async (data: IExpenseForm) => {
     try {
-      await axios.post("http://localhost:6001/api/expenses", data);
+      if (selector.editingExpense) {
+        await axios.put(
+          `http://localhost:6001/api/expenses/${selector.editingExpense._id}`,
+          data
+        );
+      } else {
+        await axios.post("http://localhost:6001/api/expenses", data);
+      }
       reset();
+      handleClose();
     } catch (error) {
       console.error(error);
     }
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <Typography
+        id="transition-modal-title"
+        variant="h6"
+        component="h2"
+        sx={{ marginBottom: 2 }}
+      >
+        {selector.editingExpense ? "Edit Expense" : "Create New Expense"}
+      </Typography>
       <Grid container columnSpacing={4} rowGap={4}>
         <Grid item xs={12}>
           <FormGroup>

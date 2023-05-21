@@ -9,10 +9,11 @@ import {
   CardActions,
   CardContent,
   Grid,
-  CircularProgress,
 } from "@mui/material";
 import CategoryComponent from "../components/Category";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { expenseActions } from "../services/expenseSlice";
 
 const style = {
   position: "absolute" as const,
@@ -24,7 +25,7 @@ const style = {
   padding: "15px",
 };
 
-interface IExpenseResponseDto {
+export interface IExpenseResponseDto {
   _id: string;
   __v: number;
   amount: number;
@@ -32,16 +33,38 @@ interface IExpenseResponseDto {
   updatedAt: string;
   description: string;
   title: string;
+  category: string;
 }
 
 const HomePage = () => {
-  const [open, setOpen] = React.useState(false);
-  const [expenses, setExpenses] = React.useState<IExpenseResponseDto[]>();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const [expenses, setExpenses] = useState<IExpenseResponseDto[]>();
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    dispatch(expenseActions.stopEditing());
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (!open) {
+      (async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:6001/api/expenses"
+          );
+          setExpenses(response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
+  }, [open]);
+
+  const editExpense = (expense: IExpenseResponseDto) => {
+    setOpen(true);
+    dispatch(expenseActions.startEditing(expense));
+  };
 
   const handleDelete = async (id: string) => {
     try {
@@ -51,32 +74,8 @@ const HomePage = () => {
       );
     } catch (error) {
       console.error(error);
-      setError("An error occurred while deleting the expense.");
     }
   };
-
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get("http://localhost:6001/api/expenses")
-      .then((response) => {
-        setExpenses(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setError("An error occurred while fetching expenses.");
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
 
   return (
     <>
@@ -96,15 +95,7 @@ const HomePage = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <Typography
-              id="transition-modal-title"
-              variant="h6"
-              component="h2"
-              sx={{ marginBottom: 2 }}
-            >
-              Create New Expense
-            </Typography>
-            <ExpenseForm />
+            <ExpenseForm handleClose={handleClose} />
           </Box>
         </Modal>
       </Box>
@@ -129,7 +120,9 @@ const HomePage = () => {
                 </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent: "flex-end" }}>
-                <Button size="small">Edit</Button>
+                <Button size="small" onClick={() => editExpense(expense)}>
+                  Edit
+                </Button>
                 <Button size="small" onClick={() => handleDelete(expense._id)}>
                   Delete
                 </Button>
