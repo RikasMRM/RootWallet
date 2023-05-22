@@ -17,6 +17,7 @@ import expenseFormValidationSchema from "./schema";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { categories } from "../../data/categories";
+import { RootState } from "../../services/store";
 
 interface IExpenseForm {
   title: string;
@@ -29,7 +30,7 @@ interface IExpenseForm {
 const ExpenseForm: React.FC<{
   handleClose: () => void;
 }> = ({ handleClose }) => {
-  const selector = useSelector((state) => state.expense);
+  const selector = useSelector((state: RootState) => state.expense);
   const {
     control,
     handleSubmit,
@@ -183,7 +184,7 @@ const ExpenseForm: React.FC<{
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ bgcolor: "#8884d8", }}
+            sx={{ bgcolor: "#8884d8" }}
             size={"medium"}
             disabled={isSubmitting}
           >
